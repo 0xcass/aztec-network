@@ -1,6 +1,6 @@
 # Aztec Sequencer Node Guide
 
-Aztec is building a decentralized, privacy-focused network running on ethereum. We are to run two nodes; validator & sequencer nodes. This guide will walk you through setting a testnet node.
+Aztec is building a decentralized, privacy-focused network running on ethereum. We are to run two nodes; validator & sequencer nodes. This guide will walk you through setting a testnet sequencer node.
 
 ## 💻 Prerequisites
 
@@ -24,7 +24,7 @@ Aztec is building a decentralized, privacy-focused network running on ethereum. 
 * Create a new evm wallet and fund it with at least 2.5 Sepolia ETH if you want to register as Validator.
 
 
-## 📥 Installation
+##  Installation process
 
 * Install `curl` and `wget` first:
 ```bash
@@ -42,7 +42,7 @@ or
 [ -f "aztec.sh" ] && rm aztec.sh; wget -q -O aztec.sh https://raw.githubusercontent.com/zunxbt/aztec-sequencer-node/main/aztec.sh && chmod +x aztec.sh && ./aztec.sh
 ```
 
-## ⚡ Commands
+## Important Commands
 
 * Check logs of your node:
 ```bash
@@ -54,7 +54,7 @@ sudo docker logs -f --tail 100 $(docker ps -q --filter ancestor=aztecprotocol/az
 sudo docker stop $(docker ps -q --filter ancestor=aztecprotocol/aztec:latest | head -n 1)
 ```
 
-## 🧩 Post-Installation
+##  After Installation
 
 **Note: After running node, you should wait at least 10 to 20 mins before your run these commands**
 
@@ -77,6 +77,48 @@ curl -s -X POST -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","method
 ```
 
 * It will ask for the `address`, `block-number` and `proof`. Enter all of them one by one and you will get `Apprentice` instantly.
+
+## 🔧 Common Errors & Solutions
+
+### Node Connection Issues
+1. **Error: "Connection refused" or "Cannot connect to node"**
+   - Check if Docker is running: `systemctl status docker`
+   - Verify node is running: `docker ps | grep aztec`
+   - Restart node: `docker restart aztec-node`
+
+2. **Error: "Port 8080 already in use"**
+   - Find process using port: `lsof -i :8080`
+   - Stop conflicting process or change port in docker run command
+
+### Docker Issues
+1. **Error: "Cannot connect to the Docker daemon"**
+   - Start Docker: `systemctl start docker`
+   - Add user to docker group: `usermod -aG docker $USER`
+
+2. **Error: "No such container: aztec-node"**
+   - Re-run installation script
+   - Check Docker logs: `docker logs aztec-node`
+
+### RPC Issues
+1. **Error: "RPC rate limit exceeded"**
+   - Switch to premium RPC provider
+   - Use Ankr or other reliable provider
+   - Consider running multiple RPC endpoints
+
+2. **Error: "Invalid RPC response"**
+   - Verify RPC URL is correct
+   - Check network connectivity
+   - Try different RPC provider e.g alchemy
+
+### System Resource Issues
+1. **Error: "Out of memory"**
+   - Increase RAM allocation
+   - Maybe consider getting higher vps
+
+2. **Error: "Disk space low"**
+   - Clean Docker: `docker system prune -a`
+   - Monitor disk usage: `df -h`
+   - Increase storage if needed
 
 ## Register as Validator
 
